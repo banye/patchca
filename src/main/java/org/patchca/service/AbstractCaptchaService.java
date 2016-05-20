@@ -23,6 +23,8 @@ import org.patchca.color.ColorFactory;
 import org.patchca.filter.FilterFactory;
 import org.patchca.font.FontFactory;
 import org.patchca.text.renderer.TextRenderer;
+import org.patchca.word.LogicWord;
+import org.patchca.word.LogicWordFactory;
 import org.patchca.word.WordFactory;
 
 import java.awt.image.BufferedImage;
@@ -106,10 +108,19 @@ public abstract class AbstractCaptchaService implements CaptchaService {
 	public Captcha getCaptcha() {
 		BufferedImage bufImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		backgroundFactory.fillBackground(bufImage);
-		String word = wordFactory.getNextWord();
-		textRenderer.draw(word, bufImage, fontFactory, colorFactory);
+		LogicWord logicWord=null;
+		if(wordFactory instanceof LogicWordFactory){
+			LogicWordFactory logicWordFactory =(LogicWordFactory) wordFactory;
+			logicWord=logicWordFactory.getNextLogicWord();
+		}else{
+			logicWord=new LogicWord();
+			logicWord.setChallenge(wordFactory.getNextWord());
+			logicWord.setValue(logicWord.getChallenge());
+			logicWord.setTips("请输入图片中的文字");
+		}
+		textRenderer.draw(logicWord.getChallenge(), bufImage, fontFactory, colorFactory);
 		bufImage = filterFactory.applyFilters(bufImage);
-		return new Captcha(word, bufImage);
+		return new Captcha(logicWord.getChallenge(), bufImage,logicWord.getValue(),logicWord.getTips());
 	}
 
 }

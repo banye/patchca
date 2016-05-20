@@ -24,11 +24,25 @@ public class Captcha {
 
 	private String challenge;
 	private BufferedImage image;
+	private String value;
+    private String tips;
 
 	public Captcha(String challenge, BufferedImage image) {
+		this.setValue(this.challenge = challenge);
+		this.image = image;
+		this.tips="请输入图片中的文字";
+	}
+	
+	
+
+	public Captcha(String challenge, BufferedImage image, String value, String tips) {
 		this.challenge = challenge;
 		this.image = image;
+		this.value = value;
+		this.tips = tips;
 	}
+
+
 
 	public String getChallenge() {
 		return challenge;
@@ -46,4 +60,22 @@ public class Captcha {
 		this.image = image;
 	}
 
+
+	public String getTips() {
+		return tips;
+	}
+
+	public void setTips(String tips) {
+		this.tips = tips;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	
 }
